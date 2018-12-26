@@ -12,16 +12,16 @@ public class Tester {
     public static void main(String[] args) {
         int port = 22;
         String user = "fs-dexefree";
-        String pass = "";
+        String pass = args[0];
         String host = "war.freeshells.org";
         SSH ssh = new SSH(user, pass, port, host);
         String cmd = "pwd";
         do {
             try {
-                System.out.println(ssh.exec(cmd, null));
+                System.out.print(ssh.exec(cmd, null) + "> ");
                 cmd = IN.nextLine();
             } catch (IllegalArgumentException | IOException e) {
-                System.out.printf("ssh: %s, try again.\n", e.toString());
+                System.out.printf("ssh: %s, try again.\n> ", e.toString());
                 cmd = IN.nextLine();
             }
         } while (!cmd.equals("exit"));

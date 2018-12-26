@@ -1,5 +1,7 @@
 package com.dxexwxexy.myssh;
 
+import android.se.omapi.Session;
+
 import com.jcabi.ssh.Shell;
 import com.jcabi.ssh.SshByPassword;
 
@@ -35,21 +37,15 @@ public class SSH {
     }
 
     public String exec(String command, File file) throws IOException {
-        // FIXME: 12/25/2018 Learn how to upload and download files properly
+        // FIXME: 12/25/2018 Learn how to upload and download files properly using IOStreams
         if (file == null) {
-            this.response = new Shell.Plain(new Shell.Safe(ssh)).exec(command);
+            Shell.Plain shell = new Shell.Plain(new Shell.Safe(ssh));
+            this.response = shell.exec(command);
         } else {
             // file upload
             Shell shell = new Shell.Safe(ssh);
             shell.exec(command, new FileInputStream(file), out, err);
         }
-        return response;
-    }
-
-    /**
-     * Getters and setters.
-     */
-    public String getresponse() {
         return response;
     }
 }
