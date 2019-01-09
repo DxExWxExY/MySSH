@@ -1,6 +1,13 @@
 package com.dxexwxexy.myssh.Testing;
 
 import com.dxexwxexy.myssh.SSH;
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
+import com.jcraft.jsch.SftpException;
+import com.jcraft.jsch.UserInfo;
 
 import java.io.IOException;
 import java.util.Scanner;
@@ -10,6 +17,71 @@ public class Tester {
     final static Scanner IN = new Scanner(System.in);
 
     public static void main(String[] args) {
+        ssh(args);
+//        sftp(args);
+    }
+
+    private static void sftp(String[] args) {
+        int port = 22;
+        String user = "fs-dexefree";
+        String pass = args[0];
+        String host = "war.freeshells.org";
+        JSch jsch = new JSch();
+//        String knownHostsFilename = System.getProperty("user.dir")+"\\host.txt";
+        try {
+            Session session = jsch.getSession(user, host, port);
+            // FIXME: 12/30/2018 Implement prompts
+            UserInfo userInfo = new UserInfo() {
+                @Override
+                public String getPassphrase() {
+                    System.out.printf("Enter Passphrase: \n");
+                    return IN.nextLine();
+                }
+
+                @Override
+                public String getPassword() {
+                    System.out.printf("Enter Password: \n");
+                    return pass;
+                }
+
+                @Override
+                public boolean promptPassword(String message) {
+                    System.out.printf("%s\n", message);
+                    return true;
+                }
+
+                @Override
+                public boolean promptPassphrase(String message) {
+                    System.out.printf("%s\n", message);
+                    return true;
+                }
+
+                @Override
+                public boolean promptYesNo(String message) {
+                    System.out.printf("%s: (y/n)? \n", message);
+                    return IN.next().toLowerCase().equals("y");
+                }
+
+                @Override
+                public void showMessage(String message) {
+                    System.out.printf("Message: %s.\n", message);
+                }
+            };
+            session.setUserInfo(userInfo);
+            session.connect();
+            Channel channel = session.openChannel("sftp");
+            channel.connect();
+            ChannelSftp sftp = (ChannelSftp) channel;
+            for (Object e : sftp.ls(sftp.pwd())) {
+                System.out.printf("%s\n", e);
+            }
+//            sftp.get("/var/www/clients/client4257/web4405/home/fs-dexefree/t.txt", "D:\\t.txt");
+        } catch (JSchException | SftpException e) {
+            System.out.printf("sftp: %s\n", e.toString());
+        }
+    }
+
+    private static void ssh(String[] args)  {
         int port = 22;
         String user = "fs-dexefree";
         String pass = args[0];

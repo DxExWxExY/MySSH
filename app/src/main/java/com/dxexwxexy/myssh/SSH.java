@@ -1,7 +1,5 @@
 package com.dxexwxexy.myssh;
 
-import android.se.omapi.Session;
-
 import com.jcabi.ssh.Shell;
 import com.jcabi.ssh.SshByPassword;
 
