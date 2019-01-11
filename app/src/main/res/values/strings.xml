@@ -9,4 +9,7 @@
     <string name="port">Port</string>
     <string name="add">Add</string>
     <string name="default_port">22</string>
+    <string name="edit_item">Edit</string>
+    <string name="delete_item">Delete</string>
+    <string name="u_h">u@h</string>
 </resources>

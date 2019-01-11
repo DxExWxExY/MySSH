@@ -4,21 +4,35 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
     FloatingActionButton add_client;
+    ClientsDB db;
+    ClientsViewer clientsViewer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle(R.string.my_clients);
+        db = new ClientsDB(this);
         initUI();
         initListeners();
+        initClientsViewer();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.client_item_menu, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     private void initUI() {
@@ -29,6 +43,13 @@ public class MainActivity extends AppCompatActivity {
         add_client.setOnClickListener(view -> {
             addClientDialog();
         });
+    }
+
+    private void initClientsViewer() {
+        RecyclerView recyclerView = findViewById(R.id.client_viewer);
+        clientsViewer = new ClientsViewer(this, db.getClients());
+        recyclerView.setAdapter(clientsViewer);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     /**
@@ -45,9 +66,27 @@ public class MainActivity extends AppCompatActivity {
         addClientDialogBuilder.setView(addView);
         AlertDialog addClientDialog = addClientDialogBuilder.create();
         add.setOnClickListener(e -> {
-            // FIXME: 1/8/2019 add entry to DB
+            db.addClient(new Client(
+                    getText(user),
+                    getText(host),
+                    getText(pass),
+                    Integer.parseInt(getText(port)))
+            );
+            clientsViewer.updateList();
             addClientDialog.dismiss();
+            toast("Added Client", 1);
         });
         addClientDialog.show();
+    }
+
+    /**
+     * Helper methods to reduce visual clutter.
+     * */
+    public String getText(EditText field) {
+        return String.valueOf(field.getText());
+    }
+
+    public void toast(String msg, int len) {
+        Toast.makeText(this, msg, len).show();
     }
 }
