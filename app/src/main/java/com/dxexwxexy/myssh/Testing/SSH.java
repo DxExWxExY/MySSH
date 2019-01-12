@@ -1,4 +1,4 @@
-package com.dxexwxexy.myssh;
+package com.dxexwxexy.myssh.Testing;
 
 import com.jcabi.ssh.Shell;
 import com.jcabi.ssh.SshByPassword;

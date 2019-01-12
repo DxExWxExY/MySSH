@@ -5,86 +5,87 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
+    <TextView
+        android:id="@+id/edit_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/edit_client"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/edit_dialog_user"
+        app:layout_constraintStart_toStartOf="@+id/edit_dialog_user"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <EditText
-        android:id="@+id/add_dialog_user"
+        android:id="@+id/edit_dialog_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
-        android:autofillHints=""
         android:ems="10"
         android:hint="@string/user"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_title" />
-
-    <TextView
-        android:id="@+id/add_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add Client"
-        android:textColor="@android:color/black"
-        android:textSize="18sp"
-        tools:layout_editor_absoluteX="98dp"
-        tools:layout_editor_absoluteY="24dp" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_title"
+        android:autofillHints="" />
 
     <EditText
-        android:id="@+id/add_dialog_host"
+        android:id="@+id/edit_dialog_host"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
         android:ems="10"
-        android:hint="Host"
+        android:hint="@string/host"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_dialog_user" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_dialog_user"
+        android:autofillHints="" />
 
-    <EditText
-        android:id="@+id/add_dialog_pass"
+    <Button
+        android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="24dp"
+        android:text="@string/update"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/edit_dialog_port"
+        app:layout_constraintStart_toStartOf="@+id/edit_dialog_port"
+        app:layout_constraintTop_toBottomOf="@+id/edit_dialog_port" />
+
+    <EditText
+        android:id="@+id/edit_dialog_pass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="31dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="33dp"
         android:ems="10"
-        android:hint="Password"
+        android:hint="@string/password"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_dialog_host" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_dialog_host"
+        android:autofillHints="" />
 
     <EditText
-        android:id="@+id/add_dialog_port"
+        android:id="@+id/edit_dialog_port"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
         android:ems="10"
-        android:hint="Port"
+        android:hint="@string/port"
         android:inputType="number"
-        android:text="22"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_dialog_pass" />
-
-    <Button
-        android:id="@+id/add_dialog_add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="@android:color/transparent"
-        android:text="Add"
-        android:textColor="@color/colorAccent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/add_dialog_port"
-        app:layout_constraintStart_toStartOf="@+id/add_dialog_port"
-        app:layout_constraintTop_toBottomOf="@+id/add_dialog_port"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_dialog_pass"
+        android:autofillHints="" />
 </android.support.constraint.ConstraintLayout>

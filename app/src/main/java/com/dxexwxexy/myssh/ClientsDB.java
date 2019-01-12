@@ -18,7 +18,7 @@ public class ClientsDB extends SQLiteOpenHelper {
     private static final String PASS = "pass";
     private static final String PORT = "port";
 
-    public ClientsDB(Context context) {
+    ClientsDB(Context context) {
         super(context, TB_NAME, null, 1);
     }
 
@@ -36,7 +36,7 @@ public class ClientsDB extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
-    public void addClient(Client c) {
+    void addClient(Client c) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues content = new ContentValues();
         content.put(USER, c.getUser());
@@ -46,7 +46,7 @@ public class ClientsDB extends SQLiteOpenHelper {
         db.insert(TB_NAME, null, content);
     }
 
-    public void editClient(Client older, Client newer) {
+    void editClient(Client older, Client newer) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues content = new ContentValues();
         content.put(USER, newer.getUser());
@@ -58,7 +58,7 @@ public class ClientsDB extends SQLiteOpenHelper {
         db.update(TB_NAME, content, whereClause, older.getData());
     }
 
-    public void deleteClient(Client c) {
+    void deleteClient(Client c) {
         SQLiteDatabase db = getWritableDatabase();
         @SuppressLint("DefaultLocale") String cmd = String.format(
                 "DELETE FROM %s WHERE %s = '%s' AND %s = '%s' AND %s = '%s' AND %s = '%d'",
@@ -67,13 +67,13 @@ public class ClientsDB extends SQLiteOpenHelper {
         db.execSQL(cmd);
     }
 
-    public ArrayList<Client> getClients() {
+    ArrayList<Client> getClients() {
         SQLiteDatabase db = getReadableDatabase();
         String cmd = String.format("SELECT * FROM %s", TB_NAME);
         Cursor data = db.rawQuery(cmd, null);
         ArrayList<Client> clients = new ArrayList<>();
         if (data.getCount() == 0) {
-            return clients;
+            return null;
         }
         while (data.moveToNext()) {
             clients.add(new Client(
@@ -85,5 +85,11 @@ public class ClientsDB extends SQLiteOpenHelper {
         }
         data.close();
         return clients;
+    }
+
+    void deleteAll() {
+        SQLiteDatabase db = getWritableDatabase();
+        String cmd = String.format("DELETE FROM %s", TB_NAME);
+        db.execSQL(cmd);
     }
 }

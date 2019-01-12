@@ -19,6 +19,16 @@ class Client {
         return new String[]{user, host, pass, String.valueOf(port)};
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Client) {
+            Client that = (Client) obj;
+            return user.equals(that.user) && host.equals(that.host)
+                    && pass.equals(that.pass) && port == that.port;
+        }
+        return false;
+    }
+
     @NonNull
     @Override
     public String toString() {

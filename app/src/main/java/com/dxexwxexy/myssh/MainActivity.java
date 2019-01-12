@@ -1,5 +1,7 @@
 package com.dxexwxexy.myssh;
 
+import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,22 +34,30 @@ public class MainActivity extends AppCompatActivity {
         initClientsViewer();
     }
 
-    // FIXME: 1/11/2019 code for main activity menu
-    /*@Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.client_item_menu, menu);
+        getMenuInflater().inflate(R.menu.main_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
-*/
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.delete_all:
+                deleteClientsDialog();
+                return true;
+            default:
+                return false;
+        }
+    }
+
     private void initUI() {
         hint = findViewById(R.id.hint_add);
         add_client = findViewById(R.id.add_client);
     }
 
     private void initListeners() {
-        add_client.setOnClickListener(view -> {
-            addClientDialog();
-        });
+        add_client.setOnClickListener(view -> addClientDialog());
     }
 
     private void initClientsViewer() {
@@ -57,10 +68,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Creates a dialog dedicated to add new clients to a DB.
+     * Creates a dialog dedicated to add new clients to the DB.
     * */
     private void addClientDialog() {
         AlertDialog.Builder addClientDialogBuilder = new AlertDialog.Builder(this);
+        @SuppressLint("InflateParams")
         View addView = getLayoutInflater().inflate(R.layout.add_client_dialog, null);
         EditText user = addView.findViewById(R.id.add_dialog_user);
         EditText host = addView.findViewById(R.id.add_dialog_host);
@@ -74,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                     getText(user),
                     getText(host),
                     getText(pass),
-                    Integer.parseInt(getText(port)))
+                    getInt(port))
             );
             clientsViewer.updateList();
             addClientDialog.dismiss();
@@ -83,11 +95,33 @@ public class MainActivity extends AppCompatActivity {
         addClientDialog.show();
     }
 
+    public void deleteClientsDialog() {
+        AlertDialog.Builder deleteClientBuilder = new AlertDialog.Builder(this);
+        DialogInterface.OnClickListener listener = (dialog, which) -> {
+            switch (which) {
+                case DialogInterface.BUTTON_POSITIVE:
+                    db.deleteAll();
+                    clientsViewer.updateList();
+                    break;
+                case DialogInterface.BUTTON_NEGATIVE:
+                    break;
+            }
+        };
+        deleteClientBuilder.setMessage("Delete All Clients?");
+        deleteClientBuilder.setPositiveButton("Yes", listener);
+        deleteClientBuilder.setNegativeButton("Cancel", listener);
+        deleteClientBuilder.show();
+    }
+
     /**
      * Helper methods to reduce visual clutter.
      * */
-    public String getText(EditText field) {
+    public static String getText(EditText field) {
         return String.valueOf(field.getText());
+    }
+
+    public static int getInt(EditText field) {
+        return Integer.parseInt(String.valueOf(field.getText()));
     }
 
     public void toast(String msg, int len) {

@@ -13,4 +13,7 @@
     <string name="delete_item">Delete</string>
     <string name="u_h">u@h</string>
     <string name="menu">⋮</string>
+    <string name="delete_all">Delete All</string>
+    <string name="edit_client">Edit Client</string>
+    <string name="update">Update</string>
 </resources>
