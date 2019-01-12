@@ -4,7 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/conn_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginBottom="5dp"
+    android:background="@drawable/client_item_bg">
 
     <TextView
         android:id="@+id/user_host_info"
@@ -20,15 +25,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/client_menu"
+        android:layout_width="15dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="8dp"
         android:background="@android:color/transparent"
         android:minHeight="?attr/actionBarSize"
+        android:text="@string/menu"
+        android:textColor="@color/gray"
+        android:textSize="30sp"
+        android:textStyle="bold"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

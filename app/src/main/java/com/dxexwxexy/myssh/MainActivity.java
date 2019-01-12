@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
@@ -17,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionButton add_client;
     ClientsDB db;
     ClientsViewer clientsViewer;
+    TextView hint;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,13 +31,15 @@ public class MainActivity extends AppCompatActivity {
         initClientsViewer();
     }
 
-    @Override
+    // FIXME: 1/11/2019 code for main activity menu
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.client_item_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
-
+*/
     private void initUI() {
+        hint = findViewById(R.id.hint_add);
         add_client = findViewById(R.id.add_client);
     }
 

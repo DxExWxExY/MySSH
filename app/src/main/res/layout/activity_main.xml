@@ -7,6 +7,7 @@
     tools:context=".MainActivity">
 
     <TextView
+        android:id="@+id/hint_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/add_client_message"
@@ -20,10 +21,13 @@
         android:id="@+id/client_viewer"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:layout_marginTop="5dp"
+        android:clipToPadding="false"
+        android:paddingBottom="100dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
+        app:layout_constraintTop_toTopOf="parent">
 
     </android.support.v7.widget.RecyclerView>
 

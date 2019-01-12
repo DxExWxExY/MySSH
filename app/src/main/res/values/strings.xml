@@ -12,4 +12,5 @@
     <string name="edit_item">Edit</string>
     <string name="delete_item">Delete</string>
     <string name="u_h">u@h</string>
+    <string name="menu">⋮</string>
 </resources>

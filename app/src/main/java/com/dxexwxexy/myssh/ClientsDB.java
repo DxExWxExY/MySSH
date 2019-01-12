@@ -24,7 +24,7 @@ public class ClientsDB extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String cmd = String.format("CREATE TABLE %s ( %s TEXT, %s TEXT, %s TEXT, %s REAL )",
+        String cmd = String.format("CREATE TABLE %s ( %s TEXT, %s TEXT, %s TEXT, %s TEXT )",
                 TB_NAME, USER, HOST, PASS, PORT);
         sqLiteDatabase.execSQL(cmd);
     }
@@ -42,7 +42,7 @@ public class ClientsDB extends SQLiteOpenHelper {
         content.put(USER, c.getUser());
         content.put(HOST, c.getHost());
         content.put(PASS, c.getPass());
-        content.put(PORT, c.getPass());
+        content.put(PORT, c.getPort());
         db.insert(TB_NAME, null, content);
     }
 
@@ -68,7 +68,6 @@ public class ClientsDB extends SQLiteOpenHelper {
     }
 
     public ArrayList<Client> getClients() {
-        // FIXME: 1/10/2019 Some exemption around here
         SQLiteDatabase db = getReadableDatabase();
         String cmd = String.format("SELECT * FROM %s", TB_NAME);
         Cursor data = db.rawQuery(cmd, null);
