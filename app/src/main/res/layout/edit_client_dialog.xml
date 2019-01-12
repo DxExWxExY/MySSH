@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="@string/edit_client"
-        android:textColor="@android:color/black"
+        android:textColor="@color/white"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="@+id/edit_dialog_user"
         app:layout_constraintStart_toStartOf="@+id/edit_dialog_user"
@@ -24,13 +24,13 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
+        android:autofillHints=""
         android:ems="10"
         android:hint="@string/user"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_title"
-        android:autofillHints="" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_title" />
 
     <EditText
         android:id="@+id/edit_dialog_host"
@@ -39,13 +39,13 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
+        android:autofillHints=""
         android:ems="10"
         android:hint="@string/host"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_dialog_user"
-        android:autofillHints="" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_dialog_user" />
 
     <Button
         android:id="@+id/button"
@@ -53,7 +53,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="24dp"
+        android:background="@android:color/transparent"
         android:text="@string/update"
+        android:textColor="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/edit_dialog_port"
         app:layout_constraintStart_toStartOf="@+id/edit_dialog_port"
@@ -66,13 +68,13 @@
         android:layout_marginStart="31dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="33dp"
+        android:autofillHints=""
         android:ems="10"
         android:hint="@string/password"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_dialog_host"
-        android:autofillHints="" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_dialog_host" />
 
     <EditText
         android:id="@+id/edit_dialog_port"
@@ -81,11 +83,11 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
+        android:autofillHints=""
         android:ems="10"
         android:hint="@string/port"
         android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_dialog_pass"
-        android:autofillHints="" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_dialog_pass" />
 </android.support.constraint.ConstraintLayout>

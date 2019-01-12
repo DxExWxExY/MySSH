@@ -24,11 +24,13 @@
         android:id="@+id/add_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
         android:text="Add Client"
-        android:textColor="@android:color/black"
+        android:textColor="@color/white"
         android:textSize="18sp"
-        tools:layout_editor_absoluteX="98dp"
-        tools:layout_editor_absoluteY="24dp" />
+        app:layout_constraintEnd_toEndOf="@+id/add_dialog_user"
+        app:layout_constraintStart_toStartOf="@+id/add_dialog_user"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/add_dialog_host"

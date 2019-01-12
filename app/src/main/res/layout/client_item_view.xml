@@ -27,10 +27,10 @@
 
     <Button
         android:id="@+id/client_menu"
-        android:layout_width="15dp"
+        android:layout_width="30dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
         android:background="@android:color/transparent"
         android:minHeight="?attr/actionBarSize"
