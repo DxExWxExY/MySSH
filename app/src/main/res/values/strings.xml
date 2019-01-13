@@ -16,4 +16,5 @@
     <string name="delete_all">Delete All</string>
     <string name="edit_client">Edit Client</string>
     <string name="update">Update</string>
+    <string name="connecting">Connecting...</string>
 </resources>

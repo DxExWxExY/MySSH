@@ -1,11 +1,14 @@
 package com.dxexwxexy.myssh;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-class Client {
+public class Client implements Parcelable {
     private String user;
     private String host;
     private String pass;
+    private String phrase;
     private int port;
 
     public Client(String user, String host, String pass, int port) {
@@ -14,6 +17,26 @@ class Client {
         this.pass = pass;
         this.port = port;
     }
+
+    protected Client(Parcel in) {
+        user = in.readString();
+        host = in.readString();
+        pass = in.readString();
+        phrase = in.readString();
+        port = in.readInt();
+    }
+
+    public static final Creator<Client> CREATOR = new Creator<Client>() {
+        @Override
+        public Client createFromParcel(Parcel in) {
+            return new Client(in);
+        }
+
+        @Override
+        public Client[] newArray(int size) {
+            return new Client[size];
+        }
+    };
 
     public String[] getData() {
         return new String[]{user, host, pass, String.valueOf(port)};
@@ -51,6 +74,14 @@ class Client {
         this.port = port;
     }
 
+    public void setPhrase(String phrase) {
+        this.phrase = phrase;
+    }
+
+    public String getPhrase() {
+        return phrase;
+    }
+
     public String getUser() {
         return user;
     }
@@ -65,5 +96,19 @@ class Client {
 
     public int getPort() {
         return port;
+    }
+
+    @Override
+    public int describeContents() {
+        return hashCode();
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(user);
+        parcel.writeString(host);
+        parcel.writeString(pass);
+        parcel.writeString(phrase);
+        parcel.writeInt(port);
     }
 }

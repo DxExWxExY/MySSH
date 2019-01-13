@@ -4,6 +4,7 @@ package com.dxexwxexy.myssh;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
@@ -40,14 +41,10 @@ public class ClientsViewer extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         ClientItemHolder client = (ClientItemHolder) viewHolder;
         //Passing instance being displayed by holder
         client.data = list.get(i);
-        client.info.setText(String.format("%s@%s -p %s",
-                list.get(i).getUser(),
-                list.get(i).getHost(),
-                list.get(i).getPort()));
-        client.layout.setOnClickListener(e -> {
-            // FIXME: 1/11/2019 Remove toast and implement activity
-            ((MainActivity) context).toast(list.get(i).toString(), 0);
-        });
+        client.info.setText(
+                String.format("%s@%s -p %s", list.get(i).getUser(),
+                        list.get(i).getHost(), list.get(i).getPort())
+        );
     }
 
     @Override
@@ -79,6 +76,7 @@ public class ClientsViewer extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             layout = itemView.findViewById(R.id.conn_layout);
             menu = itemView.findViewById(R.id.client_menu);
             layout.setElevation(10);
+            //Menu Creation
             menu.setOnClickListener(e -> {
                 PopupMenu popupMenu = new PopupMenu(context, menu);
                 popupMenu.getMenuInflater().inflate(R.menu.client_item_menu, popupMenu.getMenu());
@@ -96,6 +94,11 @@ public class ClientsViewer extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     }
                 });
                 popupMenu.show();
+            });
+            layout.setOnClickListener(e -> {
+                Intent intent = new Intent(context, FilesViewer.class);
+                intent.putExtra("client", data);
+                context.startActivity(intent);
             });
         }
 

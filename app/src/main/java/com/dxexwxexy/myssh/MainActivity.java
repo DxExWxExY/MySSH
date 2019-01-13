@@ -1,7 +1,10 @@
 package com.dxexwxexy.myssh;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -122,6 +125,19 @@ public class MainActivity extends AppCompatActivity {
 
     public static int getInt(EditText field) {
         return Integer.parseInt(String.valueOf(field.getText()));
+    }
+
+    public static boolean checkInternet(Context context) {
+        ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo wifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        NetworkInfo mobile = connManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        if (!wifi.isConnected()) {
+            return mobile.isConnected();
+        } else if (!mobile.isConnected()) {
+            return wifi.isConnected();
+        } else {
+            return false;
+        }
     }
 
     public void toast(String msg, int len) {

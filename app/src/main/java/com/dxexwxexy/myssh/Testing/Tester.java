@@ -10,14 +10,16 @@ import com.jcraft.jsch.UserInfo;
 
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.Vector;
 
 public class Tester {
 
     final static Scanner IN = new Scanner(System.in);
 
     public static void main(String[] args) {
-        ssh(args);
-//        sftp(args);
+//        ssh(args);
+        sftp(args);
+        Vector
     }
 
     private static void sftp(String[] args) {
