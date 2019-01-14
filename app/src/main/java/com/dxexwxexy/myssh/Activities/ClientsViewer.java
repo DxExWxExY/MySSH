@@ -58,7 +58,7 @@ public class ClientsViewer extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    void updateList() {
+    void update() {
         list = ((MainActivity) context).db.getClients();
         notifyDataSetChanged();
     }
@@ -87,7 +87,7 @@ public class ClientsViewer extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                             return true;
                         case R.id.item_delete:
                             ((MainActivity) context).db.deleteClient(data);
-                            updateList();
+                            update();
                             return true;
                         default:
                             return false;
@@ -129,7 +129,7 @@ public class ClientsViewer extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 } else {
                     ((MainActivity) context).db.editClient(o, n);
                     ((MainActivity) context).toast("Entry Updated", 1);
-                    updateList();
+                    update();
                 }
                 editClientDialog.dismiss();
             });

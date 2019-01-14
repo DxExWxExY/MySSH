@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
                     getText(pass),
                     getInt(port))
             );
-            clientsViewer.updateList();
+            clientsViewer.update();
             addClientDialog.dismiss();
             toast("Added Client", 1);
         });
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE:
                     db.deleteAll();
-                    clientsViewer.updateList();
+                    clientsViewer.update();
                     break;
                 case DialogInterface.BUTTON_NEGATIVE:
                     break;

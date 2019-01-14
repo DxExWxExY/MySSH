@@ -24,6 +24,7 @@ public class SFTP implements Runnable {
     private Context context;
     private UserInfo userInfo;
     private AtomicBoolean response = new AtomicBoolean(false);
+    public final Object lock = new Object();
 
     public SFTP(Client c, Handler h, Context context) {
         this.c = c;
@@ -52,9 +53,19 @@ public class SFTP implements Runnable {
 
             @Override
             public boolean promptYesNo(String message) {
-                /*ynDialog(message);
-                return response.get();*/
-                return true;
+                synchronized (lock) {
+                    try {
+                        Message msg = new Message();
+                        msg.arg1 = 3;
+                        msg.obj = message;
+                        h.sendMessage(msg);
+                        lock.wait();
+                        return response.get();
+                    } catch (InterruptedException e) {
+                        Log.e("SFTP", e.toString());
+                    }
+                }
+                return false;
             }
 
             @Override
@@ -62,24 +73,6 @@ public class SFTP implements Runnable {
                 ((MainActivity) context).toast(message, 1);
             }
         };
-    }
-
-    private void ynDialog(String msg) {
-        android.support.v7.app.AlertDialog.Builder deleteClientBuilder = new android.support.v7.app.AlertDialog.Builder(context);
-        DialogInterface.OnClickListener listener = (dialog, which) -> {
-            switch (which) {
-                case DialogInterface.BUTTON_POSITIVE:
-                    response.set(true);
-                    break;
-                case DialogInterface.BUTTON_NEGATIVE:
-                    response.set(false);
-                    break;
-            }
-        };
-        deleteClientBuilder.setMessage(msg);
-        deleteClientBuilder.setPositiveButton("Yes", listener);
-        deleteClientBuilder.setNegativeButton("No", listener);
-        deleteClientBuilder.show();
     }
 
     @Override
@@ -90,7 +83,7 @@ public class SFTP implements Runnable {
             session.setUserInfo(userInfo);
             session.connect();
             Channel channel = session.openChannel("sftp");
-            channel.connect(1);
+            channel.connect();
             ChannelSftp sftp = (ChannelSftp) channel;
             //Test Code
             String result = "";
@@ -107,7 +100,7 @@ public class SFTP implements Runnable {
         }
     }
 
-    public void setContext(Context context) {
-        this.context = context;
+    public void setResponse(boolean response) {
+        this.response.set(response);
     }
 }
