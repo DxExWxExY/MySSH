@@ -16,6 +16,8 @@ import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
 import com.jcraft.jsch.UserInfo;
 
+import java.util.ArrayList;
+import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SFTP implements Runnable {
@@ -23,6 +25,7 @@ public class SFTP implements Runnable {
     private Handler h;
     private Context context;
     private UserInfo userInfo;
+    private ChannelSftp sftp;
     private AtomicBoolean response = new AtomicBoolean(false);
     public final Object lock = new Object();
 
@@ -84,15 +87,11 @@ public class SFTP implements Runnable {
             session.connect();
             Channel channel = session.openChannel("sftp");
             channel.connect();
-            ChannelSftp sftp = (ChannelSftp) channel;
-            //Test Code
-            String result = "";
-            for (Object e : sftp.ls(sftp.pwd())) {
-                result += String.format("%s\n", e);
-            }
+            sftp = (ChannelSftp) channel;
+            path = sftp.pwd();
             Message message = new Message();
             message.arg1 = 1;
-            message.obj = result;
+            message.obj = "Connection Successful!";
             h.sendMessage(message);
         } catch (JSchException | SftpException e) {
             ((FilesViewer) context).toast(e.toString(), 1);
@@ -102,5 +101,23 @@ public class SFTP implements Runnable {
 
     public void setResponse(boolean response) {
         this.response.set(response);
+    }
+
+    public ArrayList<FileSystemEntry> getFiles() {
+        try {
+            ArrayList<FileSystemEntry> list = new ArrayList<>();
+            for (Object e : sftp.ls(path)) {
+                String[] data = e.toString().split(" ");
+                if (data[0].matches("[dl]")) { //dir or link
+                    list.add(new Directory((Vector) e, path));
+                } else { //file
+                    list.add(new File((Vector) e));
+                }
+            }
+            return list;
+        } catch (SftpException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

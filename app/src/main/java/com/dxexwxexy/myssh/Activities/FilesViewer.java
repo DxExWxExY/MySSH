@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.dxexwxexy.myssh.Data.FileSystemEntry;
 import com.dxexwxexy.myssh.R;
@@ -17,7 +19,7 @@ public class FilesViewer extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
     private ArrayList<FileSystemEntry> list;
 
-    public FilesViewer(Context context, ArrayList<FileSystemEntry> list) {
+    FilesViewer(Context context, ArrayList<FileSystemEntry> list) {
         this.context = context;
         this.list = list;
     }
@@ -33,23 +35,32 @@ public class FilesViewer extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
         FileItemHolder file = (FileItemHolder) viewHolder;
-        // FIXME: 1/13/2019 pass instance of FileSystemEntry
+        file.data = list.get(i);
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return list == null ? 0 : list.size();
     }
 
     void update() {
-        // FIXME: 1/13/2019 Update data using an sftp request
+        list = ((FilesActivity) context).sftp.getFiles();
         notifyDataSetChanged();
     }
 
     class FileItemHolder extends RecyclerView.ViewHolder {
 
-        public FileItemHolder(@NonNull View itemView) {
+        FileSystemEntry data;
+        Button menu;
+        TextView info;
+
+        FileItemHolder(@NonNull View itemView) {
             super(itemView);
+            menu = itemView.findViewById(R.id.file_menu);
+            info = itemView.findViewById(R.id.file_info);
+            info.setText(data.toString());
+            // TODO: 1/14/2019 Define menu and check instanceof to determine
+            // the action of the listener
         }
     }
 }

@@ -17,4 +17,5 @@
     <string name="edit_client">Edit Client</string>
     <string name="update">Update</string>
     <string name="connecting">Connecting...</string>
+    <string name="info">info</string>
 </resources>

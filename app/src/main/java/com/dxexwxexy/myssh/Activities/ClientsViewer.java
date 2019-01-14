@@ -75,7 +75,6 @@ public class ClientsViewer extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             info = itemView.findViewById(R.id.user_host_info);
             layout = itemView.findViewById(R.id.conn_layout);
             menu = itemView.findViewById(R.id.client_menu);
-            layout.setElevation(10);
             //Menu Creation
             menu.setOnClickListener(e -> {
                 PopupMenu popupMenu = new PopupMenu(context, menu);
