@@ -11,7 +11,7 @@
     <string name="default_port">22</string>
     <string name="edit_item">Edit</string>
     <string name="delete_item">Delete</string>
-    <string name="u_h">u@h</string>
+    <string name="u_h">u@handler</string>
     <string name="menu">⋮</string>
     <string name="delete_all">Delete All</string>
     <string name="edit_client">Edit Client</string>
@@ -19,4 +19,7 @@
     <string name="connecting">Connecting...</string>
     <string name="info">info</string>
     <string name="files">Files</string>
+    <string name="details">Details</string>
+    <string name="rename">Rename</string>
+    <string name="delete">Delete</string>
 </resources>

@@ -1,13 +1,13 @@
 package com.dxexwxexy.myssh.Testing;
 
-import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
-import com.dxexwxexy.myssh.Client;
-import com.dxexwxexy.myssh.FilesViewer;
-import com.dxexwxexy.myssh.MainActivity;
+import com.dxexwxexy.myssh.Data.Client;
+import com.dxexwxexy.myssh.Data.Directory;
+import com.dxexwxexy.myssh.Data.File;
+import com.dxexwxexy.myssh.Data.FileSystemEntry;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
@@ -16,27 +16,23 @@ import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
 import com.jcraft.jsch.UserInfo;
 
-import org.apache.commons.lang3.ArrayUtils;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class SFTP implements Runnable {
+public class SFTP extends Thread {
+
     private Client c;
-    private Handler h;
-    private Context context;
+    private Handler handler;
     private UserInfo userInfo;
     private ChannelSftp sftp;
     private AtomicBoolean response = new AtomicBoolean(false);
+
+    public String path;
     public final Object lock = new Object();
 
-    public SFTP(Client c, Handler h, Context context) {
+    public SFTP(Client c, Handler handler) {
         this.c = c;
-        this.h = h;
-        this.context = context;
+        this.handler = handler;
         userInfo = new UserInfo() {
             @Override
             public String getPassphrase() {
@@ -65,7 +61,7 @@ public class SFTP implements Runnable {
                         Message msg = new Message();
                         msg.arg1 = 4;
                         msg.obj = message;
-                        h.sendMessage(msg);
+                        handler.sendMessage(msg);
                         lock.wait();
                         return response.get();
                     } catch (InterruptedException e) {
@@ -77,7 +73,10 @@ public class SFTP implements Runnable {
 
             @Override
             public void showMessage(String message) {
-                ((MainActivity) context).toast(message, 1);
+                Message m = new Message();
+                m.arg1 = 5;
+                m.obj = message;
+                handler.sendMessage(m);
             }
         };
     }
@@ -96,7 +95,7 @@ public class SFTP implements Runnable {
             Message message = new Message();
             message.arg1 = 1;
             message.obj = "Connection Successful!";
-            h.sendMessage(message);
+            handler.sendMessage(message);
         } catch (JSchException | SftpException e) {
             ((FilesViewer) context).toast(e.toString(), 1);
             ((FilesViewer) context).finish();
@@ -118,9 +117,9 @@ public class SFTP implements Runnable {
                     list.add(new File(data));
                 }
             }
-            for (FileSystemEntry e : list) {
-                Log.e("TRACE", e.toString());
-            }
+            Message m = new Message();
+            m.arg1 = 3;
+            handler.sendMessage(m);
         } catch (SftpException e) {
             e.printStackTrace();
         }

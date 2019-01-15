@@ -1,5 +1,7 @@
 package com.dxexwxexy.myssh.Activities;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -8,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.dxexwxexy.myssh.Data.Directory;
@@ -59,24 +63,67 @@ public class FilesViewer extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         Button menu;
         TextView info;
         ConstraintLayout layout;
+        ImageView icon;
 
         FileItemHolder(@NonNull View itemView) {
             super(itemView);
             menu = itemView.findViewById(R.id.file_menu);
             info = itemView.findViewById(R.id.file_info);
             layout = itemView.findViewById(R.id.file_layout);
-
-            // TODO: 1/14/2019 Define menu and check instanceof to determine
-            // the action of the listener
+            icon = itemView.findViewById(R.id.file_entry_type);
         }
 
         void setData() {
             data = list.get(i);
             if (data instanceof Directory) {
                 info.setText(data.getName()+"/");
+                icon.setImageResource(R.drawable.ic_folder);
             } else if (data instanceof File) {
                 info.setText(data.getName());
             }
+            layout.setOnClickListener(e -> {
+                if (data instanceof Directory) {
+                    ((FilesActivity) context).sftp.path = ((Directory) data).getPath();
+                    ((FilesActivity) context).updater.start();
+                }
+            });
+            menu.setOnClickListener(e -> {
+                PopupMenu popupMenu = new PopupMenu(context, menu);
+                popupMenu.getMenuInflater().inflate(R.menu.file_item_menu, popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(item -> {
+                    switch (item.getItemId()) {
+                        case R.id.file_menu_details:
+                            fileDetailsDialog();
+                            return true;
+                        default:
+                            return false;
+                    }
+                });
+                popupMenu.show();
+            });
+        }
+
+        private void fileDetailsDialog() {
+            AlertDialog.Builder detailsBuilder = new AlertDialog.Builder(context);
+            @SuppressLint("InflateParams")
+            View detailsView = ((FilesActivity) context).getLayoutInflater().inflate(R.layout.file_details_dialog, null);
+            TextView infoDisplay = detailsView.findViewById(R.id.file_dialog_deltails);
+            Button dismiss = detailsView.findViewById(R.id.file_dialog_dismiss);
+            String details = String.format(
+                    "Permissions: %s\n# Links: %s\nOwner: %s\nGroup: %s\nSize: %s" +
+                            "\nLast Mod.: %s\nName: %s\n",
+                    data.getPermissions(), data.getLinks(), data.getOwner(), data.getGroup(),
+                    data.getSize(), data.getDate(), data.getName());
+            if (data instanceof Directory) {
+                details += "Path: " + ((Directory) data).getPath();
+            } else if (data instanceof File) {
+                details += "Type: " + ((File) data).getType();
+            }
+            infoDisplay.setText(details);
+            detailsBuilder.setView(detailsView);
+            AlertDialog detailsDialog = detailsBuilder.create();
+            detailsDialog.show();
+            dismiss.setOnClickListener(e -> detailsDialog.dismiss());
         }
     }
 }
