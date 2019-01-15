@@ -16,7 +16,11 @@ import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
 import com.jcraft.jsch.UserInfo;
 
+import org.apache.commons.lang3.ArrayUtils;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -59,7 +63,7 @@ public class SFTP implements Runnable {
                 synchronized (lock) {
                     try {
                         Message msg = new Message();
-                        msg.arg1 = 3;
+                        msg.arg1 = 4;
                         msg.obj = message;
                         h.sendMessage(msg);
                         lock.wait();
@@ -103,21 +107,22 @@ public class SFTP implements Runnable {
         this.response.set(response);
     }
 
-    public ArrayList<FileSystemEntry> getFiles() {
+    public void getFiles() {
         try {
-            ArrayList<FileSystemEntry> list = new ArrayList<>();
+            list = new ArrayList<>();
             for (Object e : sftp.ls(path)) {
-                String[] data = e.toString().split(" ");
-                if (data[0].matches("[dl]")) { //dir or link
-                    list.add(new Directory((Vector) e, path));
+                String[] data = e.toString().split("\\s+");
+                if (data[0].matches("[dl].+")) { //dir or link
+                    list.add(new Directory(data, path));
                 } else { //file
-                    list.add(new File((Vector) e));
+                    list.add(new File(data));
                 }
             }
-            return list;
+            for (FileSystemEntry e : list) {
+                Log.e("TRACE", e.toString());
+            }
         } catch (SftpException e) {
             e.printStackTrace();
         }
-        return null;
     }
 }
