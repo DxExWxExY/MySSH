@@ -6,6 +6,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import com.dxexwxexy.myssh.Data.Directory;
 import com.dxexwxexy.myssh.Data.File;
 import com.dxexwxexy.myssh.Data.FileSystemEntry;
+import com.dxexwxexy.myssh.Networking.SFTP;
 import com.dxexwxexy.myssh.R;
 
 import java.util.ArrayList;
@@ -80,11 +82,12 @@ public class FilesViewer extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 icon.setImageResource(R.drawable.ic_folder);
             } else if (data instanceof File) {
                 info.setText(data.getName());
+                icon.setImageResource(R.drawable.ic_file);
             }
             layout.setOnClickListener(e -> {
                 if (data instanceof Directory) {
-                    ((FilesActivity) context).sftp.path = ((Directory) data).getPath();
-                    ((FilesActivity) context).updater.start();
+                    SFTP.path = ((Directory) data).getPath() + "/" + data.getName();
+                    ((FilesActivity) context).sftp.fetch = true;
                 }
             });
             menu.setOnClickListener(e -> {
@@ -109,17 +112,18 @@ public class FilesViewer extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             View detailsView = ((FilesActivity) context).getLayoutInflater().inflate(R.layout.file_details_dialog, null);
             TextView infoDisplay = detailsView.findViewById(R.id.file_dialog_deltails);
             Button dismiss = detailsView.findViewById(R.id.file_dialog_dismiss);
-            String details = String.format(
+            final String details = String.format(
                     "Permissions: %s\n# Links: %s\nOwner: %s\nGroup: %s\nSize: %s" +
                             "\nLast Mod.: %s\nName: %s\n",
                     data.getPermissions(), data.getLinks(), data.getOwner(), data.getGroup(),
                     data.getSize(), data.getDate(), data.getName());
             if (data instanceof Directory) {
-                details += "Path: " + ((Directory) data).getPath();
+                infoDisplay.setText(details + "Path: " + ((Directory) data).getPath());
+                Log.e("DEBUG", ((Directory) data).getPath());
             } else if (data instanceof File) {
-                details += "Type: " + ((File) data).getType();
+                infoDisplay.setText(details + "Type: " + ((File) data).getType());
             }
-            infoDisplay.setText(details);
+            Log.e("DEBUG", details);
             detailsBuilder.setView(detailsView);
             AlertDialog detailsDialog = detailsBuilder.create();
             detailsDialog.show();

@@ -27,7 +27,8 @@ public class SFTP extends Thread {
     private ChannelSftp sftp;
     private AtomicBoolean response = new AtomicBoolean(false);
 
-    public String path;
+    public boolean fetch;
+    public static String path;
     public final Object lock = new Object();
 
     public SFTP(Client c, Handler handler) {
@@ -109,6 +110,7 @@ public class SFTP extends Thread {
     public void getFiles() {
         try {
             list = new ArrayList<>();
+            Log.e("PATH", path);
             for (Object e : sftp.ls(path)) {
                 String[] data = e.toString().split("\\s+");
                 if (data[0].matches("[dl].+")) { //dir or link
@@ -121,6 +123,11 @@ public class SFTP extends Thread {
             m.arg1 = 3;
             handler.sendMessage(m);
         } catch (SftpException e) {
+            Log.e("SFTP", e.toString());
+            Message m = new Message();
+            m.arg1 = 2;
+            m.obj = e.getMessage();
+            handler.sendMessage(m);
             e.printStackTrace();
         }
     }

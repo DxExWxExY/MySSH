@@ -74,7 +74,12 @@ public class Tester {
             Channel channel = session.openChannel("sftp");
             channel.connect();
             ChannelSftp sftp = (ChannelSftp) channel;
-            for (Object e : sftp.ls(sftp.pwd())) {
+            String path = sftp.pwd();
+            for (Object e : sftp.ls(path)) {
+                System.out.printf("%s\n", e);
+            }
+            System.out.println("=================");
+            for (Object e : sftp.ls(path+"/testdir")) {
                 System.out.printf("%s\n", e);
             }
 //            sftp.get("/var/www/clients/client4257/web4405/home/fs-dexefree/t.txt", "D:\\t.txt");
