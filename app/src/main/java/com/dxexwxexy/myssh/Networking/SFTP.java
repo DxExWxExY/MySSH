@@ -17,6 +17,8 @@ import com.jcraft.jsch.SftpException;
 import com.jcraft.jsch.UserInfo;
 
 import java.util.ArrayList;
+import java.util.Stack;
+import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SFTP extends Thread {
@@ -27,8 +29,9 @@ public class SFTP extends Thread {
     private ChannelSftp sftp;
     private AtomicBoolean response = new AtomicBoolean(false);
 
-    public boolean fetch;
+    public static boolean fetch;
     public static String path;
+    public static Stack<String> history;
     public final Object lock = new Object();
 
     public SFTP(Client c, Handler handler) {
@@ -86,6 +89,7 @@ public class SFTP extends Thread {
     public void run() {
         try {
             JSch jsch = new JSch();
+            history = new Stack<>();
             Session session = jsch.getSession(c.getUser(), c.getHost(), c.getPort());
             session.setUserInfo(userInfo);
             session.connect();
@@ -109,9 +113,17 @@ public class SFTP extends Thread {
 
     public void getFiles() {
         try {
+            Vector<ChannelSftp.LsEntry> v = new Vector<>();
+            ChannelSftp.LsEntrySelector selector = entry -> {
+                if (!entry.getFilename().equals("..")
+                    && !entry.getFilename().equals("."))
+                    v.addElement(entry);
+                return 0;
+            };
             list = new ArrayList<>();
             Log.e("PATH", path);
-            for (Object e : sftp.ls(path)) {
+            sftp.ls(path, selector);
+            for (Object e : v) {
                 String[] data = e.toString().split("\\s+");
                 if (data[0].matches("[dl].+")) { //dir or link
                     list.add(new Directory(data, path));

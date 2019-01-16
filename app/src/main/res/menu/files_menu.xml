@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/files_menu_parent"
+        android:icon="@drawable/ic_parent_dir"
+        android:title="Parent Directory"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/files_menu_put"
+        android:icon="@drawable/ic_put"
+        android:title="Upload File"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/files_menu_mkdir"
+        android:icon="@drawable/ic_mkdir"
+        android:title="Add Directory"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/files_menu_shell"
+        android:icon="@drawable/ic_shell"
+        android:title="Open Shell"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/files_menu_close"
+        android:icon="@drawable/ic_close_conn"
+        android:title="Close Connection"
+        app:showAsAction="always" />
+</menu>

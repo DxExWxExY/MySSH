@@ -86,8 +86,9 @@ public class FilesViewer extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             }
             layout.setOnClickListener(e -> {
                 if (data instanceof Directory) {
-                    SFTP.path = ((Directory) data).getPath() + "/" + data.getName();
-                    ((FilesActivity) context).sftp.fetch = true;
+                    SFTP.history.push(SFTP.path);
+                    SFTP.path = ((Directory) data).getPath();
+                    SFTP.fetch = true;
                 }
             });
             menu.setOnClickListener(e -> {
