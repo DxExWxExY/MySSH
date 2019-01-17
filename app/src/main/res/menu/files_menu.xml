@@ -3,11 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/files_menu_parent"
-        android:icon="@drawable/ic_parent_dir"
-        android:title="Parent Directory"
-        app:showAsAction="always" />
-    <item
         android:id="@+id/files_menu_put"
         android:icon="@drawable/ic_put"
         android:title="Upload File"

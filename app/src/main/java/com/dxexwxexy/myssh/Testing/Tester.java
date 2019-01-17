@@ -17,7 +17,8 @@ public class Tester {
     final static Scanner IN = new Scanner(System.in);
 
     public static void main(String[] args) {
-//        System.out.println("..".compareTo(".ssh"));
+        String a = "fdsfs";
+        System.out.println(a.substring(-1, 1));
 //        ssh(args);
         sftp(args);
         Vector

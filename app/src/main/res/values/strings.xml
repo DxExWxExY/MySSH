@@ -23,4 +23,5 @@
     <string name="rename">Rename</string>
     <string name="delete">Delete</string>
     <string name="files">files</string>
+    <string name="no_parent_dir">No Parent Directory</string>
 </resources>

@@ -3,14 +3,17 @@ package com.dxexwxexy.myssh.Activities;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -86,7 +89,9 @@ public class FilesViewer extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             }
             layout.setOnClickListener(e -> {
                 if (data instanceof Directory) {
-                    SFTP.history.push(SFTP.path);
+                    ((FilesActivity) context).recyclerView.setVisibility(View.GONE);
+                    ((FilesActivity) context).fetchProgress.setVisibility(View.VISIBLE);
+                    SFTP.hierarchy.push(SFTP.path);
                     SFTP.path = ((Directory) data).getPath();
                     SFTP.fetch = true;
                 }
@@ -99,6 +104,12 @@ public class FilesViewer extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         case R.id.file_menu_details:
                             fileDetailsDialog();
                             return true;
+                        case R.id.file_menu_rename:
+                            renameDialog();
+                            return true;
+                        case R.id.file_menu_delete:
+                            deleteDialog();
+                            return true;
                         default:
                             return false;
                     }
@@ -107,6 +118,29 @@ public class FilesViewer extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             });
         }
 
+        private void deleteDialog() {
+            android.support.v7.app.AlertDialog.Builder deleteBuilder = new android.support.v7.app.AlertDialog.Builder(context);
+            deleteBuilder.setTitle("Delete File?");
+            DialogInterface.OnClickListener listener = (dialog, which) -> {
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        if (data instanceof Directory) {
+                            ((FilesActivity) context).sftp.deleteFile(data.getName(), 1);
+                        } else if (data instanceof File) {
+                            ((FilesActivity) context).sftp.deleteFile(data.getName(), 0);
+                        }
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        dialog.dismiss();
+                        break;
+                }
+            };
+            deleteBuilder.setPositiveButton("Yes", listener);
+            deleteBuilder.setNegativeButton("No", listener);
+            deleteBuilder.show();
+        }
+
+        @SuppressLint("SetTextI18n")
         private void fileDetailsDialog() {
             AlertDialog.Builder detailsBuilder = new AlertDialog.Builder(context);
             @SuppressLint("InflateParams")
@@ -129,6 +163,19 @@ public class FilesViewer extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             AlertDialog detailsDialog = detailsBuilder.create();
             detailsDialog.show();
             dismiss.setOnClickListener(e -> detailsDialog.dismiss());
+        }
+
+        private void renameDialog() {
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle("Rename File");
+            final EditText input = new EditText(context);
+            input.setInputType(InputType.TYPE_CLASS_TEXT);
+            input.setText(data.getName());
+            builder.setView(input);
+            builder.setPositiveButton("OK", (dialog, which) -> ((FilesActivity) context).sftp
+                    .renameFile(data.getName(),input.getText().toString()));
+            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+            builder.show();
         }
     }
 }

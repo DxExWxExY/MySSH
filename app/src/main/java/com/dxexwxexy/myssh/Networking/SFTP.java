@@ -31,7 +31,7 @@ public class SFTP extends Thread {
 
     public static boolean fetch;
     public static String path;
-    public static Stack<String> history;
+    public static Stack<String> hierarchy;
     public final Object lock = new Object();
 
     public SFTP(Client c, Handler handler) {
@@ -89,7 +89,6 @@ public class SFTP extends Thread {
     public void run() {
         try {
             JSch jsch = new JSch();
-            history = new Stack<>();
             Session session = jsch.getSession(c.getUser(), c.getHost(), c.getPort());
             session.setUserInfo(userInfo);
             session.connect();
@@ -97,6 +96,7 @@ public class SFTP extends Thread {
             channel.connect();
             sftp = (ChannelSftp) channel;
             path = sftp.pwd();
+            createHierarchy();
             Message message = new Message();
             message.arg1 = 1;
             message.obj = "Connection Successful!";
@@ -105,6 +105,53 @@ public class SFTP extends Thread {
             ((FilesViewer) context).toast(e.toString(), 1);
             ((FilesViewer) context).finish();
         }
+    }
+
+    public void renameFile(String o, String n) {
+        new Thread(() -> {
+            try {
+                sftp.cd(path);
+                sftp.rename(o, n);
+                getFiles();
+            } catch(SftpException e){
+
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+    public void deleteFile(String name,int type) {
+        new Thread(() -> {
+            try {
+                sftp.cd(path);
+                switch (type) {
+                    case 0: //file
+                        sftp.rm(name);
+                        break;
+                    case 1: //dir
+                        sftp.rmdir(name);
+                }
+                getFiles();
+            } catch (SftpException e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+    private void createHierarchy() {
+        hierarchy = new Stack<>();
+        String[] tmp = path.split("/");
+        for (String e : tmp) {
+            if (hierarchy.isEmpty()) {
+                hierarchy.push("/");
+            } else if (hierarchy.peek().equals("/")){
+                hierarchy.push("/" + e);
+            } else {
+                hierarchy.push(hierarchy.peek() + "/" + e);
+            }
+        }
+        hierarchy.pop();
+        Log.e("H", hierarchy.peek());
     }
 
     public void setResponse(boolean response) {
