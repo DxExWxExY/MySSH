@@ -78,6 +78,7 @@ public class FilesViewer extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             icon = itemView.findViewById(R.id.file_entry_type);
         }
 
+        @SuppressLint("SetTextI18n")
         void setData() {
             data = list.get(i);
             if (data instanceof Directory) {
@@ -145,7 +146,7 @@ public class FilesViewer extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             AlertDialog.Builder detailsBuilder = new AlertDialog.Builder(context);
             @SuppressLint("InflateParams")
             View detailsView = ((FilesActivity) context).getLayoutInflater().inflate(R.layout.file_details_dialog, null);
-            TextView infoDisplay = detailsView.findViewById(R.id.file_dialog_deltails);
+            TextView infoDisplay = detailsView.findViewById(R.id.file_dialog_details);
             Button dismiss = detailsView.findViewById(R.id.file_dialog_dismiss);
             final String details = String.format(
                     "Permissions: %s\n# Links: %s\nOwner: %s\nGroup: %s\nSize: %s" +
@@ -171,6 +172,7 @@ public class FilesViewer extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             final EditText input = new EditText(context);
             input.setInputType(InputType.TYPE_CLASS_TEXT);
             input.setText(data.getName());
+            input.setHint(context.getString(R.string.file_name));
             builder.setView(input);
             builder.setPositiveButton("OK", (dialog, which) -> ((FilesActivity) context).sftp
                     .renameFile(data.getName(),input.getText().toString()));

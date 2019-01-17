@@ -138,32 +138,12 @@ public class SFTP extends Thread {
         }).start();
     }
 
-    private void createHierarchy() {
-        hierarchy = new Stack<>();
-        String[] tmp = path.split("/");
-        for (String e : tmp) {
-            if (hierarchy.isEmpty()) {
-                hierarchy.push("/");
-            } else if (hierarchy.peek().equals("/")){
-                hierarchy.push("/" + e);
-            } else {
-                hierarchy.push(hierarchy.peek() + "/" + e);
-            }
-        }
-        hierarchy.pop();
-        Log.e("H", hierarchy.peek());
-    }
-
-    public void setResponse(boolean response) {
-        this.response.set(response);
-    }
-
     public void getFiles() {
         try {
             Vector<ChannelSftp.LsEntry> v = new Vector<>();
             ChannelSftp.LsEntrySelector selector = entry -> {
                 if (!entry.getFilename().equals("..")
-                    && !entry.getFilename().equals("."))
+                        && !entry.getFilename().equals("."))
                     v.addElement(entry);
                 return 0;
             };
@@ -189,5 +169,55 @@ public class SFTP extends Thread {
             handler.sendMessage(m);
             e.printStackTrace();
         }
+    }
+
+    public void mkdir(String name) {
+        new Thread(() -> {
+            try {
+                sftp.cd(path);
+                sftp.mkdir(name);
+                getFiles();
+            } catch (SftpException e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+    public void put() {
+        new Thread(() -> {
+            try {
+                sftp.cd(path);
+//                sftp.put();
+            } catch (SftpException e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+    private void createHierarchy() {
+        hierarchy = new Stack<>();
+        String[] tmp = path.split("/");
+        for (String e : tmp) {
+            if (hierarchy.isEmpty()) {
+                hierarchy.push("/");
+            } else if (hierarchy.peek().equals("/")){
+                hierarchy.push("/" + e);
+            } else {
+                hierarchy.push(hierarchy.peek() + "/" + e);
+            }
+        }
+        hierarchy.pop();
+        Log.e("H", hierarchy.peek());
+    }
+
+    public void setResponse(boolean response) {
+        this.response.set(response);
+    }
+
+    public void close() {
+        sftp.quit();
+        fetch = false;
+        path = null;
+        hierarchy = null;
     }
 }

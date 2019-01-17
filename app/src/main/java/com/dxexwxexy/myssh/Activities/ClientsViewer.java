@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class ClientsViewer extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+class ClientsViewer extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
     private ArrayList<Client> list;

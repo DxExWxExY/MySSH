@@ -24,4 +24,6 @@
     <string name="delete">Delete</string>
     <string name="files">files</string>
     <string name="no_parent_dir">No Parent Directory</string>
+    <string name="file_name">File Name</string>
+    <string name="conn_msg">Connection Message</string>
 </resources>
