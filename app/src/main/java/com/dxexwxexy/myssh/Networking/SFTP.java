@@ -129,7 +129,7 @@ public class SFTP extends Thread {
                         sftp.rm(name);
                         break;
                     case 1: //dir
-                        sftp.rmdir(name);
+                        rmdir(path + "/" + name);
                 }
                 getFiles();
             } catch (SftpException e) {
@@ -138,18 +138,44 @@ public class SFTP extends Thread {
         }).start();
     }
 
-    public void getFiles() {
+    private void rmdir(String path) {
         try {
             Vector<ChannelSftp.LsEntry> v = new Vector<>();
-            ChannelSftp.LsEntrySelector selector = entry -> {
+            sftp.cd(path);
+            sftp.ls(path, entry -> {
                 if (!entry.getFilename().equals("..")
                         && !entry.getFilename().equals("."))
                     v.addElement(entry);
                 return 0;
-            };
+            });
+            for (ChannelSftp.LsEntry e : v) {
+                if (e.getAttrs().isDir()) {
+                    try { // empty dir
+                        sftp.rmdir(e.getFilename());
+                    } catch (SftpException a) { // non_empty dir
+                        rmdir(path + "/" + e.getFilename());
+                    }
+                } else { //file
+                    sftp.rm(e.getFilename());
+                }
+            }
+            sftp.rmdir(path);
+        } catch (SftpException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void getFiles() {
+        try {
+            Vector<ChannelSftp.LsEntry> v = new Vector<>();
             list = new ArrayList<>();
-            Log.e("PATH", path);
-            sftp.ls(path, selector);
+            sftp.ls(path, entry -> {
+                if (!entry.getFilename().equals("..")
+                        && !entry.getFilename().equals("."))
+                    v.addElement(entry);
+                return 0;
+            });
             for (Object e : v) {
                 String[] data = e.toString().split("\\s+");
                 if (data[0].matches("[dl].+")) { //dir or link
@@ -158,6 +184,7 @@ public class SFTP extends Thread {
                     list.add(new File(data));
                 }
             }
+            list.sort(FileSystemEntry.SORT);
             Message m = new Message();
             m.arg1 = 3;
             handler.sendMessage(m);
@@ -178,6 +205,10 @@ public class SFTP extends Thread {
                 sftp.mkdir(name);
                 getFiles();
             } catch (SftpException e) {
+                Message m = new Message();
+                m.arg1 = 2;
+                m.obj = "Directory Already Exists";
+                handler.sendMessage(m);
                 e.printStackTrace();
             }
         }).start();

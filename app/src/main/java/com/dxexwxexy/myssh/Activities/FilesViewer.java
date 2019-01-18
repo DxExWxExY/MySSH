@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
-import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -167,16 +166,17 @@ public class FilesViewer extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
 
         private void renameDialog() {
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setTitle("Rename File");
+            int p = (int) context.getResources().getDisplayMetrics().density*20;
             final EditText input = new EditText(context);
-            input.setInputType(InputType.TYPE_CLASS_TEXT);
             input.setText(data.getName());
-            input.setHint(context.getString(R.string.file_name));
-            builder.setView(input);
-            builder.setPositiveButton("OK", (dialog, which) -> ((FilesActivity) context).sftp
-                    .renameFile(data.getName(),input.getText().toString()));
-            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+            input.setHint(context.getString(R.string.new_file_name));
+            AlertDialog builder = new AlertDialog.Builder(context)
+                    .setPositiveButton("OK", (dialog, which) ->
+                            ((FilesActivity) context).sftp.renameFile(data.getName(),input.getText().toString()))
+                    .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                    .setTitle("Rename File")
+                    .create();
+            builder.setView(input, p, p, p, p);
             builder.show();
         }
     }
