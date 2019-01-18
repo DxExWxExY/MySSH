@@ -46,7 +46,7 @@ public class FilesViewer extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
         FileItemHolder file = (FileItemHolder) viewHolder;
-        file.i = i;
+        file.i = viewHolder.getAdapterPosition();
         file.setData();
     }
 

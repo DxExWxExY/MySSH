@@ -31,4 +31,5 @@
     <string name="create_directory">Create Directory</string>
     <string name="open_shell">Open Shell</string>
     <string name="close_connection">Close Connection</string>
+    <string name="dismiss">Dismiss</string>
 </resources>
