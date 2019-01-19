@@ -54,7 +54,9 @@ public class FilesActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (!SFTP.hierarchy.isEmpty()) {
+        if (sftp == null) {
+            finish();
+        } else if (!SFTP.hierarchy.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
             fetchProgress.setVisibility(View.VISIBLE);
             SFTP.path = SFTP.hierarchy.pop();
@@ -157,6 +159,8 @@ public class FilesActivity extends AppCompatActivity {
                     SFTP.fetch = true;
                     return true;
                 case 2: //error
+                    // FIXME: 1/19/2019 Toasts not working
+                    Log.d("E", message.obj.toString());
                     if (!message.obj.toString().isEmpty()) {
                         toast(message.obj.toString(), 1);
                     }

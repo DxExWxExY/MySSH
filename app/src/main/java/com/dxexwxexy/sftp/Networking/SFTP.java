@@ -107,6 +107,7 @@ public class SFTP extends Thread {
             Log.e("SFTP", e.toString());
             Message m = new Message();
             m.arg1 = 2;
+            m.arg2 = 1;
             m.obj = e.getMessage();
             handler.sendMessage(m);
             e.printStackTrace();
@@ -257,10 +258,12 @@ public class SFTP extends Thread {
     }
 
     public void close() {
-        sftp.quit();
-        fetch = false;
-        path = null;
-        hierarchy = null;
+        if (sftp != null) {
+            sftp.quit();
+            fetch = false;
+            path = null;
+            hierarchy = null;
+        }
     }
 
     public String getInfo() {
