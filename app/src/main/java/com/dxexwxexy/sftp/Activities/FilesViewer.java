@@ -1,4 +1,4 @@
-package com.dxexwxexy.myssh.Activities;
+package com.dxexwxexy.sftp.Activities;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -17,11 +17,11 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import com.dxexwxexy.myssh.Data.Directory;
-import com.dxexwxexy.myssh.Data.File;
-import com.dxexwxexy.myssh.Data.FileSystemEntry;
-import com.dxexwxexy.myssh.Networking.SFTP;
-import com.dxexwxexy.myssh.R;
+import com.dxexwxexy.sftp.Data.Directory;
+import com.dxexwxexy.sftp.Data.File;
+import com.dxexwxexy.sftp.Data.FileSystemEntry;
+import com.dxexwxexy.sftp.Networking.SFTP;
+import com.dxexwxexy.sftp.R;
 
 import java.util.ArrayList;
 

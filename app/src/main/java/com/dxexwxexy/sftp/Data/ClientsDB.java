@@ -1,4 +1,4 @@
-package com.dxexwxexy.myssh;
+package com.dxexwxexy.sftp.Data;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
@@ -18,7 +18,7 @@ public class ClientsDB extends SQLiteOpenHelper {
     private static final String PASS = "pass";
     private static final String PORT = "port";
 
-    ClientsDB(Context context) {
+    public ClientsDB(Context context) {
         super(context, TB_NAME, null, 1);
     }
 
@@ -36,7 +36,7 @@ public class ClientsDB extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
-    void addClient(Client c) {
+    public void addClient(Client c) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues content = new ContentValues();
         content.put(USER, c.getUser());
@@ -46,7 +46,7 @@ public class ClientsDB extends SQLiteOpenHelper {
         db.insert(TB_NAME, null, content);
     }
 
-    void editClient(Client older, Client newer) {
+    public void editClient(Client older, Client newer) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues content = new ContentValues();
         content.put(USER, newer.getUser());
@@ -58,7 +58,7 @@ public class ClientsDB extends SQLiteOpenHelper {
         db.update(TB_NAME, content, whereClause, older.getData());
     }
 
-    void deleteClient(Client c) {
+    public void deleteClient(Client c) {
         SQLiteDatabase db = getWritableDatabase();
         @SuppressLint("DefaultLocale") String cmd = String.format(
                 "DELETE FROM %s WHERE %s = '%s' AND %s = '%s' AND %s = '%s' AND %s = '%d'",
@@ -67,7 +67,7 @@ public class ClientsDB extends SQLiteOpenHelper {
         db.execSQL(cmd);
     }
 
-    ArrayList<Client> getClients() {
+     public ArrayList<Client> getClients() {
         SQLiteDatabase db = getReadableDatabase();
         String cmd = String.format("SELECT * FROM %s", TB_NAME);
         Cursor data = db.rawQuery(cmd, null);
@@ -87,7 +87,7 @@ public class ClientsDB extends SQLiteOpenHelper {
         return clients;
     }
 
-    void deleteAll() {
+    public void deleteAll() {
         SQLiteDatabase db = getWritableDatabase();
         String cmd = String.format("DELETE FROM %s", TB_NAME);
         db.execSQL(cmd);

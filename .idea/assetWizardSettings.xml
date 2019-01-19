@@ -35,7 +35,7 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="paddingPercent" value="-5" />
+                                                <entry key="paddingPercent" value="-10" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -46,10 +46,10 @@
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
-                                      <entry key="imageAsset" value="C:\Users\DxExWxExY\Google Drive\Documents Backup\App Resources\MySSH\baseline_folder_black_48dp.png" />
-                                      <entry key="outputName" value="ic_folder" />
+                                      <entry key="imageAsset" value="C:\Users\DxExWxExY\Google Drive\Documents Backup\App Resources\MySSH\notification.png" />
+                                      <entry key="outputName" value="ic_notification" />
                                       <entry key="theme" value="CUSTOM" />
-                                      <entry key="themeColor" value="fdda86" />
+                                      <entry key="themeColor" value="000000" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -150,6 +150,7 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
+                                                <entry key="trimmed" value="true" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -160,7 +161,7 @@
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
-                                      <entry key="imageAsset" value="C:\Users\DxExWxExY\Google Drive\Documents Backup\App Resources\MySSH\baseline_add_black_48dp.png" />
+                                      <entry key="imageAsset" value="C:\Users\DxExWxExY\Google Drive\Documents Backup\App Resources\MySSH\notification.png" />
                                     </map>
                                   </option>
                                 </PersistentState>

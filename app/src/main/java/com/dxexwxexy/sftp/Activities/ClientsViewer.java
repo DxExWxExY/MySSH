@@ -1,4 +1,4 @@
-package com.dxexwxexy.myssh;
+package com.dxexwxexy.sftp.Activities;
 
 
 import android.annotation.SuppressLint;
@@ -15,6 +15,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+
+import com.dxexwxexy.sftp.Data.Client;
+import com.dxexwxexy.sftp.R;
 
 import java.util.ArrayList;
 
@@ -95,7 +98,7 @@ class ClientsViewer extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 popupMenu.show();
             });
             layout.setOnClickListener(e -> {
-                Intent intent = new Intent(context, FilesViewer.class);
+                Intent intent = new Intent(context, FilesActivity.class);
                 intent.putExtra("client", data);
                 context.startActivity(intent);
             });

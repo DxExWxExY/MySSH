@@ -1,4 +1,4 @@
-package com.dxexwxexy.myssh;
+package com.dxexwxexy.sftp.Data;
 
 import android.os.Parcel;
 import android.os.Parcelable;

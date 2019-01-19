@@ -1,4 +1,4 @@
-package com.dxexwxexy.myssh;
+package com.dxexwxexy.sftp.Activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -22,6 +22,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.dxexwxexy.sftp.Data.Client;
+import com.dxexwxexy.sftp.Data.ClientsDB;
+import com.dxexwxexy.sftp.R;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -1,19 +1,20 @@
-package com.dxexwxexy.myssh.Testing;
+package com.dxexwxexy.sftp.Networking;
 
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import com.dxexwxexy.myssh.Data.Client;
-import com.dxexwxexy.myssh.Data.Directory;
-import com.dxexwxexy.myssh.Data.File;
-import com.dxexwxexy.myssh.Data.FileSystemEntry;
+import com.dxexwxexy.sftp.Data.Client;
+import com.dxexwxexy.sftp.Data.Directory;
+import com.dxexwxexy.sftp.Data.File;
+import com.dxexwxexy.sftp.Data.FileSystemEntry;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
+import com.jcraft.jsch.SftpProgressMonitor;
 import com.jcraft.jsch.UserInfo;
 
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ public class SFTP extends Thread {
     public static String path;
     public static Stack<String> hierarchy;
     public final Object lock = new Object();
+    public ArrayList<FileSystemEntry> list;
 
     public SFTP(Client c, Handler handler) {
         this.c = c;
@@ -102,8 +104,12 @@ public class SFTP extends Thread {
             message.obj = "Connection Successful!";
             handler.sendMessage(message);
         } catch (JSchException | SftpException e) {
-            ((FilesViewer) context).toast(e.toString(), 1);
-            ((FilesViewer) context).finish();
+            Log.e("SFTP", e.toString());
+            Message m = new Message();
+            m.arg1 = 2;
+            m.obj = e.getMessage();
+            handler.sendMessage(m);
+            e.printStackTrace();
         }
     }
 
@@ -214,12 +220,17 @@ public class SFTP extends Thread {
         }).start();
     }
 
-    public void put() {
+    public void put(java.io.File file, SftpProgressMonitor monitor) {
         new Thread(() -> {
             try {
                 sftp.cd(path);
-//                sftp.put();
+                sftp.put(file.getAbsolutePath(), file.getName(), monitor);
+                getFiles();
             } catch (SftpException e) {
+                Message m = new Message();
+                m.arg1 = 2;
+                m.obj = "Error Uploading File";
+                handler.sendMessage(m);
                 e.printStackTrace();
             }
         }).start();
@@ -250,5 +261,9 @@ public class SFTP extends Thread {
         fetch = false;
         path = null;
         hierarchy = null;
+    }
+
+    public String getInfo() {
+        return c.getUser()+"@"+c.getHost();
     }
 }

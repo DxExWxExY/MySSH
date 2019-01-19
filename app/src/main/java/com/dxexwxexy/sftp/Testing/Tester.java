@@ -1,5 +1,6 @@
-package com.dxexwxexy.myssh.Testing;
+package com.dxexwxexy.sftp.Testing;
 
+import com.dxexwxexy.sftp.Networking.SSH;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
@@ -10,7 +11,6 @@ import com.jcraft.jsch.UserInfo;
 
 import java.io.IOException;
 import java.util.Scanner;
-import java.util.Vector;
 
 public class Tester {
 
@@ -20,8 +20,7 @@ public class Tester {
         String a = "fdsfs";
         System.out.println(a.substring(-1, 1));
 //        ssh(args);
-        sftp(args);
-        Vector
+//        sftp(args);
     }
 
     private static void sftp(String[] args) {

@@ -1,4 +1,4 @@
-package com.dxexwxexy.myssh.Testing;
+package com.dxexwxexy.sftp.Networking;
 
 import com.jcabi.ssh.Shell;
 import com.jcabi.ssh.SshByPassword;
@@ -46,4 +46,5 @@ public class SSH {
         }
         return response;
     }
+
 }

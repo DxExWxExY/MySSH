@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MySSH</string>
+    <string name="app_name">SFTP</string>
     <string name="add_client_message">Press + to add a client!</string>
     <string name="my_clients">My Clients</string>
     <string name="user">User</string>
@@ -11,25 +11,28 @@
     <string name="default_port">22</string>
     <string name="edit_item">Edit</string>
     <string name="delete_item">Delete</string>
-    <string name="u_h">u@handler</string>
+    <string name="u_h">u@h</string>
     <string name="menu">⋮</string>
     <string name="delete_all">Delete All</string>
     <string name="edit_client">Edit Client</string>
     <string name="update">Update</string>
     <string name="fetching">Fetching…</string>
     <string name="info">info</string>
-    <string name="home">~/</string>
     <string name="details">Details</string>
     <string name="rename">Rename</string>
     <string name="delete">Delete</string>
     <string name="files">files</string>
     <string name="no_parent_dir">No Parent Directory</string>
     <string name="directory_name">Directory Name</string>
-    <string name="conn_msg">Connection Message</string>
+    <string name="conn_msg">SFTP Prompt</string>
     <string name="new_file_name">New Name</string>
     <string name="upload_file">Upload File</string>
     <string name="create_directory">Create Directory</string>
     <string name="open_shell">Open Shell</string>
     <string name="close_connection">Close Connection</string>
     <string name="dismiss">Dismiss</string>
+    <string name="channel_upload">upload</string>
+    <string name="upload">Upload</string>
+    <string name="uploading">Uploading </string>
+    <string name="upload_complete">Upload Completed</string>
 </resources>
