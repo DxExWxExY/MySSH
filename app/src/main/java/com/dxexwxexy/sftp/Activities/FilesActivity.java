@@ -353,7 +353,13 @@ public class FilesActivity extends AppCompatActivity {
      */
     public String getDataColumn(Uri uri, String selection, String[] selectionArgs) {
         final String column = "_data";
-        final String[] projection = {column};
+//        final String[] projection = {column};
+        final String[] projection = new String[]{
+                "content://downloads/public_downloads",
+                "content://downloads/my_downloads",
+                "content://downloads/all_downloads"
+        };
+
         try (Cursor cursor = getContentResolver().query(uri, projection, selection, selectionArgs,
                 null)) {
             if (cursor != null && cursor.moveToFirst()) {
@@ -368,7 +374,7 @@ public class FilesActivity extends AppCompatActivity {
      * @param uri The Uri to check.
      * @return Whether the Uri authority is ExternalStorageProvider.
      */
-    public static boolean isExternalStorageDocument(Uri uri) {
+    public boolean isExternalStorageDocument(Uri uri) {
         return "com.android.externalstorage.documents".equals(uri.getAuthority());
     }
 
@@ -376,7 +382,7 @@ public class FilesActivity extends AppCompatActivity {
      * @param uri The Uri to check.
      * @return Whether the Uri authority is DownloadsProvider.
      */
-    public static boolean isDownloadsDocument(Uri uri) {
+    public boolean isDownloadsDocument(Uri uri) {
         return "com.android.providers.downloads.documents".equals(uri.getAuthority());
     }
 
@@ -384,7 +390,7 @@ public class FilesActivity extends AppCompatActivity {
      * @param uri The Uri to check.
      * @return Whether the Uri authority is MediaProvider.
      */
-    public static boolean isMediaDocument(Uri uri) {
+    public boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 }
