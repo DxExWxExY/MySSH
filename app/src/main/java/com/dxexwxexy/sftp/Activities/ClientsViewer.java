@@ -127,10 +127,10 @@ class ClientsViewer extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         MainActivity.getText(pass),
                         MainActivity.getInt(port));
                 if (n.equals(o)) {
-                    ((MainActivity) context).toast("Entry Not Updated", 1);
+                    ((MainActivity) context).toast("Entry Not Updated", 0);
                 } else {
                     ((MainActivity) context).db.editClient(o, n);
-                    ((MainActivity) context).toast("Entry Updated", 1);
+                    ((MainActivity) context).toast("Entry Updated", 0);
                     update();
                 }
                 editClientDialog.dismiss();

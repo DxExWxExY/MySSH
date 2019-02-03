@@ -17,8 +17,9 @@ public class Tester {
     final static Scanner IN = new Scanner(System.in);
 
     public static void main(String[] args) {
-        String a = "fdsfs";
-        System.out.println(a.substring(-1, 1));
+        String a = "java.net.UnknownHostException: Unable to resolve host \"sx\": No address associated with hostname";
+        System.out.println(a.matches("java\\.net\\.UnknownHostException:\\s.+"));
+        System.out.println(a.replaceAll("java\\.net\\.UnknownHostException:\\s", ""));
 //        ssh(args);
 //        sftp(args);
     }

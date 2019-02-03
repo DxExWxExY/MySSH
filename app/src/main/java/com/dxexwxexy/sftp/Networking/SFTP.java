@@ -29,6 +29,7 @@ public class SFTP extends Thread {
     private Client c;
     private String path;
     private Handler handler;
+    private Session session;
     private ChannelSftp sftp;
     private UserInfo userInfo;
     private Stack<String> parents;
@@ -73,7 +74,7 @@ public class SFTP extends Thread {
                         lock.wait();
                         return response.get();
                     } catch (InterruptedException e) {
-                        Log.e("SFTP", e.toString());
+                        exceptionHandler(e);
                     }
                 }
                 return false;
@@ -93,9 +94,9 @@ public class SFTP extends Thread {
     public void run() {
         try {
             JSch jsch = new JSch();
-            Session session = jsch.getSession(c.getUser(), c.getHost(), c.getPort());
+            session = jsch.getSession(c.getUser(), c.getHost(), c.getPort());
             session.setUserInfo(userInfo);
-            session.connect();
+            session.connect(1000);
             Channel channel = session.openChannel("sftp");
             channel.connect();
             sftp = (ChannelSftp) channel;
@@ -106,14 +107,30 @@ public class SFTP extends Thread {
             message.obj = "Connection Successful!";
             handler.sendMessage(message);
         } catch (JSchException | SftpException e) {
-            Log.e("SFTP", e.toString());
-            Message m = new Message();
-            m.arg1 = 2;
-            m.arg2 = 1;
-            m.obj = e.getMessage();
-            handler.sendMessage(m);
-            e.printStackTrace();
+            exceptionHandler(e);
         }
+    }
+
+    private void exceptionHandler(Exception e) {
+        Message m = new Message();
+        m.arg1 = 2;
+        if (e.getMessage().matches("^java\\.net\\.UnknownHostException:\\s.+")) {
+            m.obj = e.getMessage().replaceAll("java\\.net\\.UnknownHostException:\\s", "");
+            m.arg2 = 1;
+        } else if (e.getMessage().matches("^java\\.net\\.ConnectException:\\s.+")) {
+            m.obj = e.getMessage().replaceAll("java\\.net\\.ConnectException:\\s", "");
+            m.arg2 = 1;
+        } else if (e.getMessage().matches("^reject HostKey:\\s.+")) {
+            m.obj = "Rejected Host Key";
+            m.arg2 = 1;
+        } else if (e.getMessage().matches("^timeout:\\s.+")) {
+            m.obj = "Connection Timeout";
+            m.arg2 = 1;
+        } else {
+            m.obj = e.getMessage();
+        }
+        handler.sendMessage(m);
+        e.printStackTrace();
     }
 
     public void renameFile(String o, String n) {
@@ -123,8 +140,7 @@ public class SFTP extends Thread {
                 sftp.rename(o, n);
                 fetchFiles();
             } catch(SftpException e){
-
-                e.printStackTrace();
+                exceptionHandler(e);
             }
         }).start();
     }
@@ -142,7 +158,7 @@ public class SFTP extends Thread {
                 }
                 fetchFiles();
             } catch (SftpException e) {
-                e.printStackTrace();
+                exceptionHandler(e);
             }
         }).start();
     }
@@ -170,7 +186,7 @@ public class SFTP extends Thread {
             }
             sftp.rmdir(path);
         } catch (SftpException e) {
-            e.printStackTrace();
+            exceptionHandler(e);
         }
 
     }
@@ -198,11 +214,7 @@ public class SFTP extends Thread {
             m.arg1 = 3;
             handler.sendMessage(m);
         } catch (SftpException e) {
-            Message m = new Message();
-            m.arg1 = 2;
-            m.obj = e.getMessage();
-            handler.sendMessage(m);
-            e.printStackTrace();
+            exceptionHandler(e);
         }
     }
 
@@ -278,9 +290,7 @@ public class SFTP extends Thread {
     public void close() {
         if (sftp != null) {
             sftp.quit();
-            fetch = false;
-            path = null;
-            parents = null;
+            session.disconnect();
         }
     }
 

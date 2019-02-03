@@ -54,15 +54,19 @@ public class FilesActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (sftp == null) {
+        try {
+            if (sftp.hasParentDir()) {
+                recyclerView.setVisibility(View.GONE);
+                fetchProgress.setVisibility(View.VISIBLE);
+                sftp.setPath(sftp.popParentDir());
+                sftp.fetch = true;
+            } else {
+                toast(getString(R.string.no_parent_dir), 1);
+            }
+        } catch (NullPointerException e) {
+            toast("Connection Unsuccessful", 1);
+            sftp.close();
             finish();
-        } else if (sftp.hasParentDir()) {
-            recyclerView.setVisibility(View.GONE);
-            fetchProgress.setVisibility(View.VISIBLE);
-            sftp.setPath(sftp.popParentDir());
-            sftp.fetch = true;
-        } else {
-            toast(getString(R.string.no_parent_dir), 1);
         }
     }
 
@@ -160,12 +164,12 @@ public class FilesActivity extends AppCompatActivity {
                     return true;
                 case 2: //error
                     Log.e("Error Toast", message.obj.toString());
-                    if (!message.obj.toString().isEmpty()) {
-                        toast(message.obj.toString(), 1);
-                    }
                     if (message.arg2 == 1) { //fatal
                         sftp.close();
                         finish();
+                    }
+                    if (!message.obj.toString().isEmpty()) {
+                        toast(message.obj.toString(), 1);
                     }
                     return true;
                 case 3: //refresh

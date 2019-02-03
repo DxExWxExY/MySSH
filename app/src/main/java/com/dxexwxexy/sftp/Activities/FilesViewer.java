@@ -133,7 +133,11 @@ public class FilesViewer extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private void deleteDialog() {
             android.support.v7.app.AlertDialog.Builder deleteBuilder = new android.support.v7.app.AlertDialog.Builder(context);
-            deleteBuilder.setTitle("Delete File?");
+            if (data instanceof Directory) {
+                deleteBuilder.setTitle("Delete Directory?");
+            } else if (data instanceof File) {
+                deleteBuilder.setTitle("Delete File?");
+            }
             DialogInterface.OnClickListener listener = (dialog, which) -> {
                 switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
