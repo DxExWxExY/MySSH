@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.dxexwxexy.sftp.Data.Directory;
 import com.dxexwxexy.sftp.Data.File;
 import com.dxexwxexy.sftp.Data.FileSystemEntry;
+import com.dxexwxexy.sftp.Networking.ProgressMonitor;
 import com.dxexwxexy.sftp.Networking.SFTP;
 import com.dxexwxexy.sftp.R;
 
@@ -56,8 +57,16 @@ public class FilesViewer extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     void update() {
-        list = ((FilesActivity) context).sftp.list;
+        list = getContext().sftp.list;
         notifyDataSetChanged();
+    }
+
+    private FilesActivity getContext() {
+        return ((FilesActivity) context);
+    }
+
+    private SFTP getSftp() {
+        return getContext().sftp;
     }
 
     class FileItemHolder extends RecyclerView.ViewHolder {
@@ -89,11 +98,17 @@ public class FilesViewer extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             }
             layout.setOnClickListener(e -> {
                 if (data instanceof Directory) {
-                    ((FilesActivity) context).recyclerView.setVisibility(View.GONE);
-                    ((FilesActivity) context).fetchProgress.setVisibility(View.VISIBLE);
+                    getContext().recyclerView.setVisibility(View.GONE);
+                    getContext().fetchProgress.setVisibility(View.VISIBLE);
+                    // TODO: 2/2/2019 change fields type to non-static and encapsulate
                     SFTP.hierarchy.push(SFTP.path);
                     SFTP.path = ((Directory) data).getPath();
                     SFTP.fetch = true;
+                } else if (data instanceof File) {
+                    // TODO: 2/2/2019 Implement get based on file
+                    getSftp().get(data.getName(), getContext().dir.getAbsolutePath(),
+                            new ProgressMonitor(getContext(), FilesActivity.DW, data.getName()));
+
                 }
             });
             menu.setOnClickListener(e -> {
@@ -125,9 +140,9 @@ public class FilesViewer extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
                         if (data instanceof Directory) {
-                            ((FilesActivity) context).sftp.deleteFile(data.getName(), 1);
+                            getContext().sftp.deleteFile(data.getName(), 1);
                         } else if (data instanceof File) {
-                            ((FilesActivity) context).sftp.deleteFile(data.getName(), 0);
+                            getContext().sftp.deleteFile(data.getName(), 0);
                         }
                         break;
                     case DialogInterface.BUTTON_NEGATIVE:
@@ -144,7 +159,7 @@ public class FilesViewer extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private void fileDetailsDialog() {
             AlertDialog.Builder detailsBuilder = new AlertDialog.Builder(context);
             @SuppressLint("InflateParams")
-            View detailsView = ((FilesActivity) context).getLayoutInflater().inflate(R.layout.file_details_dialog, null);
+            View detailsView = getContext().getLayoutInflater().inflate(R.layout.file_details_dialog, null);
             TextView infoDisplay = detailsView.findViewById(R.id.file_dialog_details);
             Button dismiss = detailsView.findViewById(R.id.file_dialog_dismiss);
             final String details = String.format(
@@ -172,7 +187,7 @@ public class FilesViewer extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             input.setHint(context.getString(R.string.new_file_name));
             AlertDialog builder = new AlertDialog.Builder(context)
                     .setPositiveButton("OK", (dialog, which) ->
-                            ((FilesActivity) context).sftp.renameFile(data.getName(),input.getText().toString()))
+                            getContext().sftp.renameFile(data.getName(),input.getText().toString()))
                     .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
                     .setTitle("Rename File")
                     .create();

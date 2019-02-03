@@ -188,7 +188,7 @@ public class FilesActivity extends AppCompatActivity {
         updater = new Thread(() -> {
             while (true) {
                 if (SFTP.fetch) {
-                    sftp.getFiles();
+                    sftp.fetchFiles();
                     SFTP.fetch = false;
                 }
             }

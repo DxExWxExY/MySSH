@@ -31,8 +31,9 @@
     <string name="open_shell">Open Shell</string>
     <string name="close_connection">Close Connection</string>
     <string name="dismiss">Dismiss</string>
-    <string name="channel_upload">upload</string>
+    <string name="channel_transfer">transfer</string>
     <string name="upload">Upload</string>
     <string name="uploading">Uploading </string>
-    <string name="upload_complete">Upload Completed</string>
+    <string name="transfer_complete">Transfer Completed</string>
+    <string name="downloading">Downloading</string>
 </resources>

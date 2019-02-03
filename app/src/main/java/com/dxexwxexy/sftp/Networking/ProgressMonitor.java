@@ -32,7 +32,7 @@ public class ProgressMonitor implements SftpProgressMonitor {
                 .setAutoCancel(true)
                 .setProgress(0, 0, true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = context.getString(R.string.channel_upload);
+            CharSequence name = context.getString(R.string.channel_transfer);
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel notificationChannel = new NotificationChannel(channel, name, importance);
             NotificationManager notificationManager =
@@ -44,24 +44,23 @@ public class ProgressMonitor implements SftpProgressMonitor {
 
     @Override
     public void init(int op, String src, String dest, long max) {
+        size = max;
         if (op == SftpProgressMonitor.PUT) {
             notification.setContentTitle(context.getString(R.string.uploading) + " " + fileName);
         } else if (op == SftpProgressMonitor.GET) {
-            // FIXME: 1/19/2019 implement accordingly
-            notification.setContentText(context.getString(R.string.uploading));
-            notification.setContentTitle(context.getString(R.string.uploading) + fileName);
+            notification.setContentTitle(context.getString(R.string.downloading) + " " + fileName);
         }
         notificationManager.notify(Integer.parseInt(channel), notification.build());
     }
 
     @Override
     public boolean count(long count) {
-        return count != size;
+        return count < size;
     }
 
     @Override
     public void end() {
-        notification.setContentText(context.getString(R.string.upload_complete));
+        notification.setContentText(context.getString(R.string.transfer_complete));
         notification.setProgress(0, 0, false);
         notificationManager.notify(Integer.parseInt(channel), notification.build());
     }

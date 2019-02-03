@@ -17,6 +17,10 @@ import com.jcraft.jsch.SftpException;
 import com.jcraft.jsch.SftpProgressMonitor;
 import com.jcraft.jsch.UserInfo;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Stack;
 import java.util.Vector;
@@ -119,7 +123,7 @@ public class SFTP extends Thread {
             try {
                 sftp.cd(path);
                 sftp.rename(o, n);
-                getFiles();
+                fetchFiles();
             } catch(SftpException e){
 
                 e.printStackTrace();
@@ -138,7 +142,7 @@ public class SFTP extends Thread {
                     case 1: //dir
                         rmdir(path + "/" + name);
                 }
-                getFiles();
+                fetchFiles();
             } catch (SftpException e) {
                 e.printStackTrace();
             }
@@ -173,7 +177,7 @@ public class SFTP extends Thread {
 
     }
 
-    public void getFiles() {
+    public void fetchFiles() {
         try {
             Vector<ChannelSftp.LsEntry> v = new Vector<>();
             list = new ArrayList<>();
@@ -196,7 +200,6 @@ public class SFTP extends Thread {
             m.arg1 = 3;
             handler.sendMessage(m);
         } catch (SftpException e) {
-            Log.e("SFTP", e.toString());
             Message m = new Message();
             m.arg1 = 2;
             m.obj = e.getMessage();
@@ -210,7 +213,7 @@ public class SFTP extends Thread {
             try {
                 sftp.cd(path);
                 sftp.mkdir(name);
-                getFiles();
+                fetchFiles();
             } catch (SftpException e) {
                 Message m = new Message();
                 m.arg1 = 2;
@@ -226,11 +229,29 @@ public class SFTP extends Thread {
             try {
                 sftp.cd(path);
                 sftp.put(file.getAbsolutePath(), file.getName(), monitor);
-                getFiles();
+                fetchFiles();
             } catch (SftpException e) {
                 Message m = new Message();
                 m.arg1 = 2;
                 m.obj = "Error Uploading File";
+                handler.sendMessage(m);
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+    public void get(String name, String dir, SftpProgressMonitor monitor) {
+        new Thread(() -> {
+            try {
+                sftp.cd(path);
+                sftp.get(name,
+                        new FileOutputStream(dir + java.io.File.separator + name),
+                        monitor);
+                fetchFiles();
+            } catch (SftpException | FileNotFoundException e) {
+                Message m = new Message();
+                m.arg1 = 2;
+                m.obj = "Error Downloading File";
                 handler.sendMessage(m);
                 e.printStackTrace();
             }
@@ -250,7 +271,6 @@ public class SFTP extends Thread {
             }
         }
         hierarchy.pop();
-        Log.e("H", hierarchy.peek());
     }
 
     public void setResponse(boolean response) {
