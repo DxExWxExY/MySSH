@@ -19,8 +19,6 @@ import com.jcraft.jsch.UserInfo;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Stack;
 import java.util.Vector;
@@ -29,16 +27,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class SFTP extends Thread {
 
     private Client c;
+    private String path;
     private Handler handler;
-    private UserInfo userInfo;
     private ChannelSftp sftp;
+    private UserInfo userInfo;
+    private Stack<String> parents;
     private AtomicBoolean response = new AtomicBoolean(false);
 
-    public static boolean fetch;
-    public static String path;
-    public static Stack<String> hierarchy;
-    public final Object lock = new Object();
+    public boolean fetch;
     public ArrayList<FileSystemEntry> list;
+    public final Object lock = new Object();
 
     public SFTP(Client c, Handler handler) {
         this.c = c;
@@ -259,18 +257,18 @@ public class SFTP extends Thread {
     }
 
     private void createHierarchy() {
-        hierarchy = new Stack<>();
+        parents = new Stack<>();
         String[] tmp = path.split("/");
         for (String e : tmp) {
-            if (hierarchy.isEmpty()) {
-                hierarchy.push("/");
-            } else if (hierarchy.peek().equals("/")){
-                hierarchy.push("/" + e);
+            if (parents.isEmpty()) {
+                parents.push("/");
+            } else if (parents.peek().equals("/")){
+                parents.push("/" + e);
             } else {
-                hierarchy.push(hierarchy.peek() + "/" + e);
+                parents.push(parents.peek() + "/" + e);
             }
         }
-        hierarchy.pop();
+        parents.pop();
     }
 
     public void setResponse(boolean response) {
@@ -282,11 +280,31 @@ public class SFTP extends Thread {
             sftp.quit();
             fetch = false;
             path = null;
-            hierarchy = null;
+            parents = null;
         }
     }
 
     public String getInfo() {
         return c.getUser()+"@"+c.getHost();
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public String popParentDir() {
+        return parents.pop();
+    }
+
+    public void pushParentDir(String parent) {
+        parents.push(parent);
+    }
+
+    public boolean hasParentDir() {
+        return !parents.isEmpty();
     }
 }

@@ -35,7 +35,7 @@ public class FilesActivity extends AppCompatActivity {
 
     File dir;
     SFTP sftp;
-    Thread updater;
+    Thread fetcher;
     Handler connHandler;
     FilesViewer filesViewer;
     RecyclerView recyclerView;
@@ -56,11 +56,11 @@ public class FilesActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (sftp == null) {
             finish();
-        } else if (!SFTP.hierarchy.isEmpty()) {
+        } else if (sftp.hasParentDir()) {
             recyclerView.setVisibility(View.GONE);
             fetchProgress.setVisibility(View.VISIBLE);
-            SFTP.path = SFTP.hierarchy.pop();
-            SFTP.fetch = true;
+            sftp.setPath(sftp.popParentDir());
+            sftp.fetch = true;
         } else {
             toast(getString(R.string.no_parent_dir), 1);
         }
@@ -155,12 +155,11 @@ public class FilesActivity extends AppCompatActivity {
                 case 1: //success
                     updateTitle();
                     createFolder();
-                    updater.start();
-                    SFTP.fetch = true;
+                    fetcher.start();
+                    sftp.fetch = true;
                     return true;
                 case 2: //error
-                    // FIXME: 1/19/2019 Toasts not working
-                    Log.d("E", message.obj.toString());
+                    Log.e("Error Toast", message.obj.toString());
                     if (!message.obj.toString().isEmpty()) {
                         toast(message.obj.toString(), 1);
                     }
@@ -185,18 +184,18 @@ public class FilesActivity extends AppCompatActivity {
                     return false;
             }
         });
-        updater = new Thread(() -> {
+        fetcher = new Thread(() -> {
             while (true) {
-                if (SFTP.fetch) {
+                if (sftp.fetch) {
                     sftp.fetchFiles();
-                    SFTP.fetch = false;
+                    sftp.fetch = false;
                 }
             }
         });
     }
 
     private void updateTitle() {
-        String title = SFTP.path.substring(SFTP.path.lastIndexOf("/") + 1);
+        String title = sftp.getPath().substring(sftp.getPath().lastIndexOf("/") + 1);
         setTitle(title + "/");
     }
 
@@ -295,7 +294,6 @@ public class FilesActivity extends AppCompatActivity {
                 if ("primary".equalsIgnoreCase(type)) {
                     return Environment.getExternalStorageDirectory() + "/" + split[1];
                 }
-
                 // TODO handle non-primary volumes
             }
             // DownloadsProvider
@@ -338,7 +336,6 @@ public class FilesActivity extends AppCompatActivity {
         else if ("file".equalsIgnoreCase(uri.getScheme())) {
             return uri.getPath();
         }
-
         return null;
     }
 

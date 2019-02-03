@@ -100,12 +100,10 @@ public class FilesViewer extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 if (data instanceof Directory) {
                     getContext().recyclerView.setVisibility(View.GONE);
                     getContext().fetchProgress.setVisibility(View.VISIBLE);
-                    // TODO: 2/2/2019 change fields type to non-static and encapsulate
-                    SFTP.hierarchy.push(SFTP.path);
-                    SFTP.path = ((Directory) data).getPath();
-                    SFTP.fetch = true;
+                    getSftp().pushParentDir(getSftp().getPath());
+                    getSftp().setPath(((Directory) data).getPath());
+                    getSftp().fetch = true;
                 } else if (data instanceof File) {
-                    // TODO: 2/2/2019 Implement get based on file
                     getSftp().get(data.getName(), getContext().dir.getAbsolutePath(),
                             new ProgressMonitor(getContext(), FilesActivity.DW, data.getName()));
 
